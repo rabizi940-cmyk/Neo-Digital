@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS DIGITAL | Jogos & Serviços de Otimização</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            cyan: '#00f0ff',
+                            purple: '#7000ff',
+                            pink: '#ff007f',
+                            dark: '#0a0a12',
+                            card: '#121225',
+                            border: '#2a2a4a'
+                        }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #06060c;
+            color: #e2e8f0;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+        .glow-purple {
+            box-shadow: 0 0 15px rgba(112, 0, 255, 0.4);
+        }
+        .glow-pink {
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+        }
+        .glass {
+            background: rgba(18, 18, 37, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .cyber-border {
+            position: relative;
+        }
+        .cyber-border::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 10px; height: 10px;
+            border-bottom: 2px solid #00f0ff;
+            border-right: 2px solid #00f0ff;
+        }
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #0a0a12;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #2a2a4a;
+            border-radius: 3px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden scrollbar-thin">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 glass border-b border-brand-border/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-purple to-brand-cyan p-[2px] transform group-hover:rotate-6 transition-all duration-300">
+                    <div class="w-full h-full bg-brand-dark rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid fa-gamepad text-brand-cyan text-2xl group-hover:scale-110 transition-transform"></i>
+                    </div>
+                </div>
+                <div>
+                    <span class="font-orbitron font-black text-2xl tracking-wider text-white">NEXUS<span class="text-brand-cyan">.</span>DIGITAL</span>
+                    <span class="block text-[10px] font-orbitron tracking-widest text-brand-purple uppercase">Games & Optimization</span>
+                </div>
+            </a>
+
+            <!-- Search Bar -->
+            <div class="hidden md:flex items-center flex-1 max-w-md mx-8 relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-400"></i>
+                <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Buscar jogos, otimizações ou serviços..." 
+                    class="w-full bg-brand-dark/80 border border-brand-border rounded-full py-2 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-brand-cyan transition-colors">
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-4">
+                <a href="https://www.instagram.com/ravvziin/" target="_blank" class="hidden sm:flex items-center gap-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:opacity-90 transition font-semibold text-sm">
+                    <i class="fa-brands fa-instagram text-lg"></i>
+                    <span>@ravvziin</span>
+                </a>
+
+                <button onclick="toggleCart()" class="relative p-3 bg-brand-card rounded-xl border border-brand-border hover:border-brand-cyan transition group">
+                    <i class="fa-solid fa-cart-shopping text-xl text-gray-300 group-hover:text-brand-cyan transition"></i>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-brand-pink text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center glow-pink">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="relative py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <div class="relative rounded-3xl overflow-hidden border border-brand-border/60 bg-gradient-to-r from-brand-card via-brand-dark to-brand-card p-8 md:p-12 shadow-2xl">
+            <div class="absolute inset-0 bg-[radial-gradient(#00f0ff_1px,transparent_1px)] [background-size:24px_24px] opacity-10"></div>
+            <div class="relative z-10 max-w-2xl">
+                <span class="inline-block bg-brand-cyan/10 text-brand-cyan text-xs font-orbitron px-3 py-1 rounded-full border border-brand-cyan/30 mb-4 font-semibold uppercase tracking-widest">
+                    <i class="fa-solid fa-bolt mr-1"></i> Desempenho Máximo & Jogos Clássicos
+                </span>
+                <h1 class="text-4xl md:text-6xl font-orbitron font-black tracking-tight text-white mb-4">
+                    SUA EXPERIÊNCIA <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-brand-purple to-brand-pink">GAMER DEFINITIVA</span>
+                </h1>
+                <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                    Compre jogos otimizados, melhore o FPS do seu PC com Windows Lite e crie seus próprios jogos ou sites profissionais com a equipe NEXUS.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#catalog" class="bg-gradient-to-r from-brand-cyan to-brand-purple text-brand-dark font-orbitron font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition shadow-lg glow-cyan flex items-center gap-2">
+                        <i class="fa-solid fa-gamepad"></i> Ver Catálogo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-brand-border/40 pb-6">
+            <h2 class="text-2xl font-orbitron font-bold text-white flex items-center gap-3">
+                <i class="fa-solid fa-fire text-brand-pink"></i> PRODUTOS & SERVIÇOS
+            </h2>
+            <div class="flex flex-wrap gap-2" id="categoryFilters">
+                <button onclick="filterCategory('all')" class="cat-btn active bg-brand-cyan text-brand-dark font-semibold px-4 py-2 rounded-lg text-sm transition">Todos</button>
+                <button onclick="filterCategory('jogos')" class="cat-btn bg-brand-card text-gray-300 hover:text-white border border-brand-border px-4 py-2 rounded-lg text-sm transition">Jogos</button>
+                <button onclick="filterCategory('otimizacao')" class="cat-btn bg-brand-card text-gray-300 hover:text-white border border-brand-border px-4 py-2 rounded-lg text-sm transition">Otimizações</button>
+                <button onclick="filterCategory('desenvolvimento')" class="cat-btn bg-brand-card text-gray-300 hover:text-white border border-brand-border px-4 py-2 rounded-lg text-sm transition">Desenvolvimento</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow">
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Os cards dos produtos serão renderizados via JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark border-t border-brand-border/50 mt-16 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <span class="font-orbitron font-bold text-xl text-white">NEXUS<span class="text-brand-cyan">.</span>DIGITAL</span>
+                <p class="text-gray-500 text-sm mt-1">Sua loja completa de jogos, otimização e desenvolvimento digital.</p>
+            </div>
+            <div class="text-gray-400 text-sm">
+                Chave PIX: <span class="text-brand-cyan font-mono">betaniaferreiradacruz@gmail.com</span>
+            </div>
+            <div class="text-gray-400 text-sm flex items-center gap-2">
+                <span>Instagram Oficial:</span>
+                <a href="https://www.instagram.com/ravvziin/" target="_blank" class="text-brand-pink font-semibold hover:underline">@ravvziin</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Carrinho Drawer (Slide-over) -->
+    <div id="cartModal" class="fixed inset-0 z-50 hidden">
+        <div onclick="toggleCart()" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-brand-card border-l border-brand-border p-6 flex flex-col justify-between shadow-2xl">
+            <div>
+                <div class="flex items-center justify-between border-b border-brand-border pb-4 mb-4">
+                    <h3 class="font-orbitron font-bold text-xl text-white flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-brand-cyan"></i> Seu Carrinho
+                    </h3>
+                    <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-xl">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div id="cartItems" class="space-y-4 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin">
+                    <!-- Itens do carrinho renderizados dinamicamente -->
+                </div>
+            </div>
+
+            <div class="border-t border-brand-border pt-4">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-400 font-semibold">Total:</span>
+                    <span id="cartTotal" class="font-orbitron font-bold text-2xl text-brand-cyan">R$ 0,00</span>
+                </div>
+                <button onclick="openCheckout()" class="w-full bg-gradient-to-r from-brand-cyan via-brand-purple to-brand-pink text-white font-orbitron font-bold py-3.5 rounded-xl hover:opacity-90 transition glow-purple">
+                    Finalizar Compra
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Checkout / PIX + Instagram -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div onclick="closeCheckout()" class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
+        <div class="relative bg-brand-card border border-brand-border w-full max-w-lg rounded-2xl p-6 sm:p-8 shadow-2xl z-10">
+            <button onclick="closeCheckout()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-brand-cyan/10 border border-brand-cyan text-brand-cyan rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-pix text-2xl"></i>
+                </div>
+                <h3 class="font-orbitron font-bold text-2xl text-white">Pagamento via PIX</h3>
+                <p class="text-gray-400 text-sm mt-1">Faça a transferência e envie o comprovante no Instagram</p>
+            </div>
+
+            <div class="bg-brand-dark/80 border border-brand-border rounded-xl p-4 mb-6 text-center">
+                <span class="text-xs text-gray-400 block uppercase tracking-wider font-orbitron">Valor Total a Pagar</span>
+                <span id="checkoutTotal" class="text-3xl font-orbitron font-black text-brand-cyan">R$ 0,00</span>
+            </div>
+
+            <!-- Chave PIX -->
+            <div class="mb-6">
+                <label class="block text-xs font-orbitron text-gray-300 mb-2">CHAVE PIX (E-MAIL):</label>
+                <div class="flex items-center gap-2">
+                    <input type="text" readonly value="betaniaferreiradacruz@gmail.com" id="pixKey" 
+                        class="w-full bg-brand-dark border border-brand-border rounded-lg px-3 py-2.5 text-sm font-mono text-brand-cyan focus:outline-none">
+                    <button onclick="copyPixKey()" class="bg-brand-purple hover:bg-brand-purple/80 text-white font-bold px-4 py-2.5 rounded-lg text-sm transition flex items-center gap-2 whitespace-nowrap">
+                        <i class="fa-solid fa-copy"></i> Copiar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Botão Enviar Comprovante Instagram -->
+            <a href="https://www.instagram.com/ravvziin/" target="_blank" class="w-full bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 text-white font-orbitron font-bold py-3.5 rounded-xl hover:opacity-90 transition flex items-center justify-center gap-3 shadow-lg glow-pink">
+                <i class="fa-brands fa-instagram text-2xl"></i>
+                <span>Enviar Comprovante no Instagram</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 left-6 z-50 hidden bg-brand-card border border-brand-cyan text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-brand-cyan text-xl"></i>
+        <span id="toastMsg" class="text-sm font-semibold">Chave PIX copiada com sucesso!</span>
+    </div>
+
+    <script>
+        // Catálogo de Produtos
+        const products = [
+            { id: 1, name: "FIFA 26 (Pré-Venda VIP)", category: "jogos", price: 120.00, badge: "Lançamento", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&auto=format&fit=crop&q=80" },
+            { id: 2, name: "FIFA 07 Remastered HD", category: "jogos", price: 25.00, badge: "Clássico", image: "https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=500&auto=format&fit=crop&q=80" },
+            { id: 3, name: "PES 2013 Atualizado", category: "jogos", price: 30.00, badge: "Nostalgia", image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500&auto=format&fit=crop&q=80" },
+            { id: 4, name: "Minecraft Ultra Otimizado", category: "jogos", price: 35.00, badge: "+200 FPS", image: "https://images.unsplash.com/photo-1627856013091-fed6e4e30025?w=500&auto=format&fit=crop&q=80" },
+            { id: 5, name: "Otimização Gamer Completa", category: "otimizacao", price: 50.00, badge: "Serviço", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=80" },
+            { id: 6, name: "Windows Lite Gamer ISO", category: "otimizacao", price: 40.00, badge: "Ultra Light", image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&auto=format&fit=crop&q=80" },
+            { id: 7, name: "Criação de Sites Profissionais", category: "desenvolvimento", price: 250.00, badge: "Web Dev", image: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=500&auto=format&fit=crop&q=80" },
+            { id: 8, name: "Criação de Jogos Sob Encomenda", category: "desenvolvimento", price: 450.00, badge: "Game Dev", image: "https://images.unsplash.com/photo-1556438064-2d7646166914?w=500&auto=format&fit=crop&q=80" }
+        ];
+
+        let cart = [];
+        let currentCategory = 'all';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+        });
+
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            const filtered = products.filter(p => {
+                const matchCategory = currentCategory === 'all' || p.category === currentCategory;
+                const matchSearch = p.name.toLowerCase().includes(search);
+                return matchCategory && matchSearch;
+            });
+
+            grid.innerHTML = filtered.map(product => `
+                <div class="bg-brand-card border border-brand-border rounded-2xl overflow-hidden hover:border-brand-cyan transition duration-300 flex flex-col justify-between group cyber-border">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-brand-dark/80 backdrop-blur-md text-brand-cyan text-xs font-orbitron font-bold px-3 py-1 rounded-full border border-brand-cyan/30">
+                            ${product.badge}
+                        </span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-orbitron font-bold text-lg text-white mb-2 group-hover:text-brand-cyan transition">${product.name}</h3>
+                        </div>
+                        <div class="mt-4 flex items-center justify-between border-t border-brand-border/40 pt-4">
+                            <div>
+                                <span class="text-xs text-gray-400 block">Preço</span>
+                                <span class="font-orbitron font-extrabold text-xl text-white">R$ ${product.price.toFixed(2).replace('.', ',')}</span>
+                            </div>
+                            <button onclick="addToCart(${product.id})" class="bg-brand-purple/20 border border-brand-purple/50 text-brand-cyan hover:bg-brand-purple hover:text-white p-3 rounded-xl transition">
+                                <i class="fa-solid fa-cart-plus text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-cyan', 'text-brand-dark', 'active');
+                btn.classList.add('bg-brand-card', 'text-gray-300');
+            });
+            event.target.classList.add('bg-brand-cyan', 'text-brand-dark', 'active');
+            renderProducts();
+        }
+
+        function filterProducts() {
+            renderProducts();
+        }
+
+        function addToCart(id) {
+            const item = products.find(p => p.id === id);
+            const inCart = cart.find(c => c.id === id);
+
+            if (inCart) {
+                inCart.qty++;
+            } else {
+                cart.push({ ...item, qty: 1 });
+            }
+
+            updateCart();
+            showToast(`"${item.name}" adicionado ao carrinho!`);
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const cartTotal = document.getElementById('cartTotal');
+
+            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+            const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+
+            cartCount.innerText = totalQty;
+            cartTotal.innerText = `R$ ${totalPrice.toFixed(2).replace('.', ',')}`;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = `<p class="text-center text-gray-500 py-8">Seu carrinho está vazio.</p>`;
+                return;
+            }
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="flex items-center justify-between bg-brand-dark p-3 rounded-xl border border-brand-border">
+                    <div>
+                        <h4 class="font-bold text-sm text-white">${item.name}</h4>
+                        <span class="text-xs text-brand-cyan font-mono">R$ ${item.price.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 bg-brand-card border border-brand-border rounded flex items-center justify-center text-xs text-gray-300">-</button>
+                        <span class="text-sm font-bold text-white">${item.qty}</span>
+                        <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 bg-brand-card border border-brand-border rounded flex items-center justify-center text-xs text-gray-300">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(c => c.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    cart = cart.filter(c => c.id !== id);
+                }
+            }
+            updateCart();
+        }
+
+        function toggleCart() {
+            document.getElementById('cartModal').classList.toggle('hidden');
+        }
+
+        function openCheckout() {
+            if (cart.length === 0) {
+                showToast("Adicione produtos ao carrinho primeiro!");
+                return;
+            }
+            const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            document.getElementById('checkoutTotal').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            toggleCart();
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        function copyPixKey() {
+            const pixInput = document.getElementById('pixKey');
+            pixInput.select();
+            document.execCommand('copy');
+            showToast("Chave PIX copiada com sucesso!");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+    </script>
+</body>
+</html>
